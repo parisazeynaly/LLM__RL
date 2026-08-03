@@ -1,0 +1,27 @@
+# Core RL / environment
+stable-baselines3[extra]>=2.3.0
+gymnasium>=0.29.0
+shimmy>=1.3.0            # SB3<->Gymnasium compatibility shim (was in the original pip install line)
+
+# LLM API client
+groq>=0.9.0
+
+# Causal discovery (FCI / PAG estimation — used in the causal-discovery stage)
+causal-learn>=0.1.3.8
+
+# NLP / embeddings
+sentence-transformers>=2.7.0
+
+# Data / ML utilities
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+
+# Plotting (figures / result charts)
+matplotlib>=3.8.0
+
+# Standard-library-adjacent, but pinned for completeness since older
+# environments may not have them by default
+# (hashlib, threading, dataclasses, getpass, json, re, time, random, os, sys,
+#  types, gc, shutil, collections, typing are all Python stdlib — no install needed)
+
