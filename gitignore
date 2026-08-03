@@ -1,0 +1,17 @@
+# Secrets — never commit the real .env, only .env.example
+.env
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Large, regenerable binary artifacts — NOT result CSVs. Keep everything
+# under empirical_evaluation/ and data/results/ committed, since those are
+# the raw evidence backing every number in the manuscript (per the README's
+# reproducibility notes) — don't gitignore them just because they're generated.
+ckpt/*.zip
+ckpt/*.npz
+
+# OS
+.DS_Store
