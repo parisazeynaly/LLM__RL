@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parisa Zeinaliashtiyani — Causal Reinforcement Learning for LLM Security</title>
+<meta name="description" content="Research portfolio: security testing of large language models via causal reinforcement learning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  /* ============ TOKENS ============ */
+  :root{
+    --paper:        #10141A;   /* ink-navy background */
+    --paper-raised: #171D26;
+    --ink:          #E9E6DC;   /* parchment text */
+    --ink-soft:     #ABA79A;
+    --ink-faint:    #6B695F;
+    --steel:        #4FA8A0;   /* causal-edge teal */
+    --steel-soft:   #7CC2BB;
+    --brick:        #C9A227;   /* antique-gold accent */
+    --brick-soft:   #E0C466;
+    --moss:         #6FA97A;   /* success / improvement accent */
+    --line:         rgba(233,230,220,0.10);
+    --line-strong:  rgba(233,230,220,0.22);
+
+    --display: 'Spectral', Georgia, serif;
+    --mono:    'IBM Plex Mono', ui-monospace, monospace;
+    --body:    'Inter', -apple-system, sans-serif;
+
+    --max: 980px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity:0.35;
+    pointer-events:none;
+    z-index:0;
+  }
+  a{color:var(--steel); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--steel); outline-offset:3px;}
+  ::selection{background:var(--brick-soft); color:var(--paper);}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+
+  /* ============ NAV ============ */
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(16,20,26,0.86);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; justify-content:space-between; align-items:center; height:64px;}
+  .brand{font-family:var(--mono); font-size:13px; font-weight:600; letter-spacing:0.01em; white-space:nowrap;}
+  .brand span{color:var(--brick);}
+  .navlinks{display:flex; gap:28px; font-family:var(--mono); font-size:13px;}
+  .navlinks a{color:var(--ink-soft);}
+  .navlinks a:hover{color:var(--ink); text-decoration:none;}
+
+  /* ============ ELEMENTS ============ */
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--steel); display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--steel);}
+  h1,h2,h3{font-family:var(--display); font-weight:600; margin:0 0 0.4em;}
+  h1{font-size:clamp(34px,5vw,52px); line-height:1.08; letter-spacing:-0.01em;}
+  h2{font-size:clamp(24px,3vw,32px); letter-spacing:-0.005em;}
+  h2.hero-headline{font-size:clamp(30px,4.4vw,46px); line-height:1.1;}
+  h3{font-size:19px; font-weight:600;}
+  p{margin:0 0 1em; color:var(--ink-soft);}
+  .lede{font-size:18px; color:var(--ink);}
+  .status-line{
+    display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12.5px;
+    color:var(--ink-soft); margin:2px 0 18px;
+  }
+  .status-dot{
+    width:7px; height:7px; border-radius:50%; background:var(--steel);
+    box-shadow:0 0 0 3px rgba(79,168,160,0.22);
+  }
+  section{padding:88px 0; border-bottom:1px solid var(--line); position:relative; z-index:1;}
+  section:last-of-type{border-bottom:none;}
+
+  code, .tag{font-family:var(--mono); font-size:13px;}
+  .tag{
+    display:inline-block; padding:3px 9px; border:1px solid var(--line-strong);
+    border-radius:3px; color:var(--ink-soft); margin:0 6px 6px 0; background:var(--paper-raised);
+  }
+
+  /* ============ PROFILE / BIO ============ */
+  .profile-hero{padding:56px 0 40px; border-bottom:1px solid var(--line);}
+  .profile-grid{display:grid; grid-template-columns:160px 1fr; gap:40px; align-items:start;}
+  .profile-photo-col{display:flex; flex-direction:column; align-items:center; gap:10px;}
+  .profile-photo{
+    width:140px; height:140px; border-radius:50%; border:1.5px dashed var(--line-strong);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:28px; font-weight:600; color:var(--ink-faint);
+    background:var(--paper-raised);
+  }
+  .profile-photo-note{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); text-align:center; max-width:140px;}
+  img.profile-photo{border:1px solid var(--line-strong); object-fit:cover; font-size:0;}
+  .profile-name{font-family:var(--display); font-size:clamp(28px,3.6vw,38px); margin-bottom:4px;}
+  .profile-title{color:var(--ink-soft); font-size:15px; margin-bottom:14px;}
+  .profile-contact{display:flex; gap:18px; font-family:var(--mono); font-size:13px; margin-bottom:4px;}
+  .profile-line{font-size:14px; color:var(--ink-soft); margin-top:12px; max-width:660px;}
+  .profile-line span{font-family:var(--mono); font-size:11.5px; color:var(--brick); display:block; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;}
+
+  /* ============ HERO ============ */
+  .hero{padding-top:64px;}
+  .hero-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:48px; align-items:center;}
+  .hero-cta{display:flex; gap:14px; margin-top:28px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono); font-size:13px; padding:11px 18px; border-radius:3px;
+    border:1px solid var(--ink); color:var(--ink); transition:all .15s ease;
+  }
+  .btn:hover{background:var(--ink); color:var(--paper); text-decoration:none;}
+  .btn.primary{background:var(--steel); border-color:var(--steel); color:var(--paper);}
+  .btn.primary:hover{background:#3C8880;}
+
+  .graph-box{
+    background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:6px;
+    padding:12px; position:relative;
+  }
+  .graph-caption{
+    font-family:var(--mono); font-size:11px; color:var(--ink-faint); text-align:center; margin-top:6px;
+  }
+  #causal-svg text{font-family:var(--mono); font-size:10.5px; fill:var(--ink-soft);}
+  #causal-svg .node{fill:var(--paper-raised); stroke:var(--ink); stroke-width:1.3; transition:stroke .2s, fill .2s;}
+  #causal-svg .node.hot{fill:var(--brick); stroke:var(--brick);}
+  #causal-svg .node.hot ~ text{fill:var(--paper);}
+  #causal-svg .edge{fill:none; stroke:var(--steel-soft); stroke-width:1.4; opacity:0.85;}
+  #causal-svg .edge.target{stroke:var(--brick-soft);}
+  #causal-svg .nodelabel{fill:var(--ink); font-weight:500;}
+  #causal-svg .nodelabel.hot{fill:var(--paper);}
+
+  /* ============ ABOUT ============ */
+  .about-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:40px; align-items:start;}
+  .about-meta{font-family:var(--mono); font-size:12.5px; color:var(--ink-faint); margin-top:-6px;}
+  .advisor-box{
+    background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:6px; padding:22px;
+  }
+  .advisor-box h3{font-size:14px; text-transform:uppercase; letter-spacing:0.04em; color:var(--brick); font-family:var(--mono); margin-bottom:10px;}
+  .advisor-box p{font-size:14.5px; margin-bottom:14px;}
+
+  /* ============ RESEARCH ============ */
+  .rq-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:32px 0;}
+  .rq-metrics-note{font-size:14px; color:var(--ink-soft); max-width:640px; margin-bottom:8px;}
+  .rq-card{
+    background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:6px; padding:24px;
+  }
+  .rq-card .qid{font-family:var(--mono); color:var(--brick); font-size:13px; margin-bottom:8px; display:block;}
+
+  .chart-box{
+    background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:6px;
+    padding:28px 24px 16px; margin-top:36px;
+  }
+  .bar-row{display:grid; grid-template-columns:150px 1fr 70px; align-items:center; gap:14px; margin-bottom:16px; font-family:var(--mono); font-size:13px;}
+  .bar-track{background:rgba(233,230,220,0.08); border-radius:2px; height:22px; overflow:hidden;}
+  .bar-fill{height:100%; width:0; border-radius:2px; transition:width 1.1s cubic-bezier(.2,.8,.2,1);}
+  .bar-fill.b1{background:var(--ink-faint);}
+  .bar-fill.b2{background:var(--steel-soft);}
+  .bar-fill.b3{background:var(--moss);}
+  .chart-note{font-size:12.5px; color:var(--ink-faint); margin-top:6px;}
+
+  .findings{margin-top:36px;}
+  .findings li{margin-bottom:10px; color:var(--ink-soft);}
+  .ethics-box{
+    margin-top:32px; padding:20px 22px; border-left:3px solid var(--steel);
+    background:var(--paper-raised); border-radius:0 6px 6px 0;
+  }
+  .ethics-box h3{font-size:15px; text-transform:uppercase; letter-spacing:0.04em; color:var(--steel); font-family:var(--mono); font-weight:600;}
+  .ethics-box p{margin:0; font-size:14.5px;}
+
+  /* ============ PUBLICATIONS ============ */
+  .pub-card{
+    background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:6px;
+    padding:28px; margin-top:28px;
+  }
+  .pub-status{
+    font-family:var(--mono); font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:8px; margin-bottom:12px;
+  }
+  .pub-authors{font-family:var(--mono); font-size:13px; color:var(--ink-faint); margin-bottom:14px;}
+  .pub-actions{display:flex; gap:12px; margin-top:18px; flex-wrap:wrap;}
+  .cite-btn{background:none; font-family:var(--mono); cursor:pointer;}
+  .bibtex{
+    display:none; margin-top:16px; padding:16px; background:var(--paper); border:1px solid var(--line);
+    border-radius:4px; font-family:var(--mono); font-size:12.5px; color:var(--ink-soft);
+    overflow-x:auto; white-space:pre;
+  }
+  .bibtex.open{display:block;}
+
+  /* ============ CODE / ARCHITECTURE ============ */
+  .arch-card{
+    background:var(--paper-raised); border:1px solid var(--line-strong); border-radius:6px;
+    padding:28px; margin-top:28px;
+  }
+  .arch-bullets{margin:0 0 8px; padding-left:20px;}
+  .arch-bullets li{color:var(--ink-soft); margin-bottom:9px; font-size:14.5px;}
+  .arch-bullets code{
+    font-family:var(--mono); font-size:12.5px; background:var(--paper); padding:1px 5px;
+    border-radius:3px; color:var(--steel-soft);
+  }
+  .arch-diagram-box{
+    margin-top:22px; background:var(--paper); border:1px solid var(--line); border-radius:6px;
+    padding:18px 14px 12px;
+  }
+  .arch-svg{width:100%; height:auto; display:block;}
+  .arch-svg .ab rect{fill:var(--paper-raised); stroke:var(--line-strong); stroke-width:1.2;}
+  .arch-svg .ab.hot rect{fill:rgba(201,162,39,0.10); stroke:var(--brick);}
+  .arch-svg .ab text{fill:var(--ink); font-family:var(--mono); font-size:11px; font-weight:500;}
+  .arch-svg .ab text.sub{fill:var(--ink-faint); font-size:9px; font-weight:400;}
+  .arch-svg .aedge{stroke:var(--steel-soft); stroke-width:1.4; fill:none;}
+  .arch-svg .aedge.dashed{stroke-dasharray:4 3; stroke:var(--ink-faint);}
+  .arch-caption{font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); margin:12px 2px 0;}
+
+  /* ============ CV / CONTACT ============ */
+  .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:24px;}
+  .cv-block h3{font-size:15px; text-transform:uppercase; letter-spacing:0.04em; color:var(--steel); font-family:var(--mono); font-weight:600; margin-bottom:10px;}
+  .contact-list a{display:block; font-family:var(--mono); font-size:14px; padding:10px 0; border-bottom:1px solid var(--line);}
+  footer{padding:36px 0; text-align:center; font-family:var(--mono); font-size:12px; color:var(--ink-faint);}
+
+  @media (max-width:800px){
+    .hero-grid, .profile-grid, .rq-grid, .repo-grid, .contact-grid{grid-template-columns:1fr;}
+    .profile-photo-col{margin:0 auto 12px;}
+    .navlinks{display:none;}
+    .brand{font-size:11px;}
+    section{padding:56px 0;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .bar-fill{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">PARISA<span>·</span>ZEINALIASHTIYANI</div>
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ PROFILE / BIO ============ -->
+<section id="profile" class="profile-hero">
+  <div class="wrap">
+    <div>
+      <h1 class="profile-name">Parisa Zeinaliashtiyani</h1>
+      <p class="profile-title">M.Sc. Graduate in Data Science &amp; Engineering · University of Naples Federico II</p>
+      <div class="profile-contact">
+        <a href="mailto:p.zeinaliashtiyani@studenti.unina.it">✉ Email</a>
+        <a href="https://github.com/parisazeynaly" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/parisa-zeynaly" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <p class="lede" style="max-width:640px; margin-top:20px;">
+        I'm an M.Sc. graduate in Data Science &amp; Engineering from the University of Naples Federico II,
+        specializing in the intersection of <strong>causal inference</strong>, <strong>reinforcement
+        learning</strong>, and <strong>trustworthy AI</strong>. My research focuses on automating and
+        optimizing security‑testing architectures for large language models, under the supervision of
+        Prof. Roberto Pietrantuono.
+      </p>
+      <div class="profile-line"><span>🎯 Research Interests</span> Trustworthy AI &amp; Alignment · Causal Reinforcement Learning · Adversarial Safety Evaluation · LLM Security Testing &amp; Guardrail‑Bypass Diagnostics</div>
+      <div class="profile-line"><span>🔍 Seeking PhD Positions (Fall 2027)</span> Formal causal identification in deep sequential models, safety‑critical evaluation architectures, and robust alignment‑evaluation methodologies.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">PhD Applicant — Causal Inference × RL × Security Testing</div>
+      <h2 class="hero-headline">Causal reinforcement learning for security testing of large language models.</h2>
+      <p class="lede">
+        My thesis sits at the intersection of three fields: <strong>causal inference</strong>,
+        <strong>reinforcement learning</strong>, and <strong>LLM security testing</strong>. It asks
+        a simple question — which structural properties of a prompt actually <em>cause</em> a
+        safety‑guardrail bypass — and uses the answer to guide an RL agent, instead of relying on
+        sparse pass/fail signals alone.
+      </p>
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <span>Manuscript Finalized · Targeting Submission</span>
+      </div>
+      <div>
+        <span class="tag">Causal Inference</span>
+        <span class="tag">Reinforcement Learning</span>
+        <span class="tag">LLM Security Testing</span>
+      </div>
+      <div class="hero-cta">
+        <a class="btn primary" href="#research">Read the research →</a>
+        <a class="btn" href="mailto:p.zeinaliashtiyani@unina.studenti.it?subject=Manuscript%20request%3A%20Causal%20RL%20for%20LLM%20Security%20Testing">Request manuscript →</a>
+      </div>
+    </div>
+
+    <div class="graph-box">
+      <svg id="causal-svg" viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- edges -->
+        <path class="edge" d="M 90 40 C 120 70, 150 90, 175 105"/>
+        <path class="edge" d="M 330 40 L 300 90"/>
+        <path class="edge" d="M 90 40 C 60 90, 60 150, 90 190"/>
+        <path class="edge" d="M 175 130 C 150 150, 130 165, 110 185"/>
+        <path class="edge" d="M 300 115 C 260 140, 220 155, 190 170"/>
+        <path class="edge" d="M 90 210 C 110 240, 140 255, 165 265"/>
+        <path class="edge" d="M 190 190 C 175 215, 165 235, 160 255"/>
+        <path class="edge target" d="M 165 285 C 170 300, 175 305, 182 312"/>
+        <path class="edge target" d="M 300 130 C 260 200, 230 260, 195 305"/>
+        <path class="edge target" d="M 90 220 C 100 260, 130 295, 175 313"/>
+
+        <!-- nodes -->
+        <g class="n" data-def="Whether the prompt is structured as a step-by-step technical guide.">
+          <ellipse class="node" cx="80" cy="32" rx="46" ry="16"/>
+          <text class="nodelabel" x="80" y="36" text-anchor="middle">instr_style</text>
+        </g>
+        <g class="n" data-def="Presence of urgent, commanding phrasing ('must', 'immediately').">
+          <ellipse class="node" cx="330" cy="32" rx="44" ry="16"/>
+          <text class="nodelabel" x="330" y="36" text-anchor="middle">imperative</text>
+        </g>
+        <g class="n" data-def="Root signal: explicit harmful or illegal intent in the prompt.">
+          <ellipse class="node" cx="330" cy="90" rx="52" ry="16"/>
+          <text class="nodelabel" x="330" y="94" text-anchor="middle">malicious_intent</text>
+        </g>
+        <g class="n" data-def="Framing the request as 'for research' or 'a controlled study'.">
+          <ellipse class="node" cx="190" cy="118" rx="58" ry="16"/>
+          <text class="nodelabel" x="190" y="122" text-anchor="middle">responsibility_ext</text>
+        </g>
+        <g class="n" data-def="Metaphor, jargon, or indirection used to mask intent.">
+          <ellipse class="node" cx="300" cy="122" rx="52" ry="16"/>
+          <text class="nodelabel" x="300" y="126" text-anchor="middle">obfuscation</text>
+        </g>
+        <g class="n" data-def="Wrapping the request in a fictional or hypothetical scenario.">
+          <ellipse class="node" cx="190" cy="185" rx="50" ry="16"/>
+          <text class="nodelabel" x="190" y="189" text-anchor="middle">hypothetical</text>
+        </g>
+        <g class="n hotnode" data-def="Terminal outcome node: did the target model produce a safety-guardrail-bypassing response?">
+          <ellipse class="node hot" cx="190" cy="318" rx="26" ry="16"/>
+          <text class="nodelabel hot" x="190" y="322" text-anchor="middle">y</text>
+        </g>
+      </svg>
+      <p class="graph-caption">Hover a node — estimated Partial Ancestral Graph (PAG), Fig. 1</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ ADVISOR FIT ============ -->
+<section id="about">
+  <div class="wrap">
+    <div class="advisor-box">
+      <h3>Looking for</h3>
+      <p>
+        PhD advisors and labs working on formal causal identification in sequential or deep
+        models, adversarial and safety‑critical evaluation architectures, or trustworthy /
+        alignment‑evaluation methods for LLMs.
+      </p>
+      <div>
+        <span class="tag">Trustworthy AI</span>
+        <span class="tag">Causal Reinforcement Learning</span>
+        <span class="tag">LLM Safety Evaluation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEARCH ============ -->
+<section id="research">
+  <div class="wrap">
+    <div class="eyebrow">Causal Inference × Reinforcement Learning × Security Testing</div>
+    <h2>Two research questions, one empirical thread</h2>
+    <p class="lede" style="max-width:640px;">
+      LLM safety training is only as good as the tests that probe it. If a security‑testing agent
+      can't tell <em>why</em> a guardrail was bypassed, it wastes effort and gives a false sense of
+      security about what's actually been checked.
+    </p>
+    <p style="max-width:640px;">
+      Everything in the thesis builds toward answering two nested questions, tested against a real
+      target model (Llama‑4‑Scout) on 104 held‑out AdvBench prompts across three seeds.
+    </p>
+
+    <div class="rq-grid">
+      <div class="rq-card">
+        <span class="qid">RQ1 · Reinforcement Learning × Security Testing</span>
+        <h3>Is RL effective for testing LLM security?</h3>
+        <p>Comparing an RL‑based mutation strategy (RLBreaker) against static, dataset‑based prompting
+        drawn from DAN (Shen et al., arXiv:2308.03825, 2023). The result: only a marginal difference
+        on a well‑aligned target — adaptive mutation alone isn't the advantage it's assumed to be.</p>
+      </div>
+      <div class="rq-card">
+        <span class="qid">RQ2 · Causal Inference × Reinforcement Learning</span>
+        <h3>Is Causal RL better than RL alone?</h3>
+        <p><strong>Causal RL</strong> — reinforcement learning combined with causal knowledge extracted
+        via a COAT‑style causal‑discovery pipeline — replaces sparse pass/fail feedback with a dense,
+        causally‑derived reward. RQ2 tests whether this combination outperforms standard RL on both
+        effectiveness and cost.</p>
+      </div>
+    </div>
+
+    <p class="rq-metrics-note">
+      Both RQs are evaluated on the same two axes used throughout the RL‑based security‑testing
+      literature (RLBreaker, MazeBreaker): a <strong>success‑rate metric</strong> (ASR) and a
+      <strong>cost metric</strong> — training and inference time / API overhead.
+    </p>
+
+    <div class="chart-box">
+      <h3 style="margin-bottom:6px;">ASR — mean ± std, 3 seeds</h3>
+      <p style="font-size:12.5px; color:var(--ink-faint); margin-bottom:20px;">ASR (Attack Success Rate): the standard metric in the LLM security‑testing literature for the rate at which a safety guardrail is bypassed.</p>
+
+      <div class="bar-row">
+        <span>DAN (static)</span>
+        <div class="bar-track"><div class="bar-fill b1" data-w="18.27"></div></div>
+        <span>18.3%</span>
+      </div>
+      <div class="bar-row">
+        <span>RLBreaker</span>
+        <div class="bar-track"><div class="bar-fill b2" data-w="19.33"></div></div>
+        <span>19.3%</span>
+      </div>
+      <div class="bar-row">
+        <span>Causal RL (ours)</span>
+        <div class="bar-track"><div class="bar-fill b3" data-w="61.54"></div></div>
+        <span>61.5%</span>
+      </div>
+      <p class="chart-note">3.18× improvement over the RL‑only baseline, with lower variance across seeds (±1.67 vs ±3.21) and a 41.8% reduction in training‑time API calls.</p>
+    </div>
+
+    <ul class="findings">
+      <li><strong>Finding 1 —</strong> RL‑only mutation barely beats static prompting on a well‑aligned target model, consistent with a credit‑assignment bottleneck.</li>
+      <li><strong>Finding 2 —</strong> Dense, causally‑derived reward shaping resolves that bottleneck and generalizes zero‑shot to a different model family (45.2% ASR on Qwen‑3).</li>
+      <li><strong>Open question —</strong> query‑count‑to‑success is statistically identical between methods, suggesting the causal signal changes <em>which</em> prompts succeed rather than how fast — flagged explicitly as unresolved in the thesis.</li>
+    </ul>
+
+    <div class="ethics-box">
+      <h3>Ethics &amp; responsible disclosure</h3>
+      <p>
+        This work is defensive AI‑safety evaluation research, not an offensive toolkit. All experiments
+        run against the public AdvBench benchmark under controlled, non‑deployed conditions; no successful
+        bypass prompts, model outputs, or exploit templates are published in the thesis, the codebase,
+        or this site. The goal is to measure and explain alignment failure modes so they can be fixed —
+        consistent with standard practice in the LLM security‑testing literature (e.g. HarmBench, RLBreaker).
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Parisa Zeinaliashtiyani — built with a plain HTML/CSS/JS site, deployed via GitHub Pages.</div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // animate ASR bars in on scroll
+  const bars = document.querySelectorAll('.bar-fill');
+  const barObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.style.width = e.target.dataset.w + '%';
+        barObserver.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.4});
+  bars.forEach(b=>barObserver.observe(b));
+
+  // hero causal graph hover -> highlight node + show definition
+  const svg = document.getElementById('causal-svg');
+  const caption = document.querySelector('.graph-caption');
+  const defaultCaption = caption.textContent;
+  svg.querySelectorAll('.n').forEach(g=>{
+    g.addEventListener('mouseenter', ()=>{
+      g.querySelector('.node').classList.add('hot');
+      g.querySelector('.nodelabel').classList.add('hot');
+      caption.textContent = g.dataset.def;
+    });
+    g.addEventListener('mouseleave', ()=>{
+      if(!g.classList.contains('hotnode')){
+        g.querySelector('.node').classList.remove('hot');
+        g.querySelector('.nodelabel').classList.remove('hot');
+      }
+      caption.textContent = defaultCaption;
+    });
+  });
+</script>
+
+</body>
+</html>
