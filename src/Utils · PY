@@ -1,0 +1,29 @@
+"""
+Small, dependency-light helpers used across the pipeline.
+
+Extracted from causal_rl.py, lines 201-215 (set_global_seed) and 857-858 (stable_hash).
+"""
+
+import hashlib
+import random
+
+import numpy as np
+import torch
+
+
+def set_global_seed(seed: int = 42) -> None:
+    """Seed Python, NumPy, and PyTorch RNGs for reproducible runs."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+    # Keep it fast, but keep the random logic consistent
+    torch.backends.cudnn.benchmark = True
+    torch.backends.cudnn.deterministic = False
+
+    print(f"Global seed set: {seed}")
+
+
+def stable_hash(text: str) -> str:
+    """Deterministic MD5 hash of a string, used for cache keys / dedup."""
+    return hashlib.md5(str(text or "").encode("utf-8", errors="ignore")).hexdigest()
