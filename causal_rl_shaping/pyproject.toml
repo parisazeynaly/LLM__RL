@@ -1,1 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
+[project]
+name = "causal-rl-shaping"
+version = "0.1.0"
+description = "Potential-Based Reward Shaping via Structural Causal Models for LLM Safety"
+authors = [{ name = "Parisa Zeinaliashtiyani" }]
+readme = "README.md"
+dependencies = ["numpy"]
