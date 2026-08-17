@@ -5,7 +5,22 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "causal-rl-shaping"
 version = "0.1.0"
-description = "Potential-Based Reward Shaping via Structural Causal Models for LLM Safety"
-authors = [{ name = "Parisa Zeinaliashtiyani" }]
+authors = [
+  { name="Parisa Zeinaliashtiyani" }
+]
+description = "Potential-Based Causal Reward Shaping for LLM Red-Teaming"
 readme = "README.md"
-dependencies = ["numpy"]
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.20.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/parisaze/CausalRLBreaker"
+"Live Demo" = "https://huggingface.co/spaces/parisaze/Reward"
