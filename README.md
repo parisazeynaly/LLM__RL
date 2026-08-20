@@ -1,9 +1,11 @@
 # CausalRLBreaker: Security Testing of LLMs via Causal RL
+
+### Causal Reinforcement Learning for Automated Security Testing of Large Language Models
+
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![PyPI version](https://badge.fury.io/py/causal-rl-shaping.svg)](https://badge.fury.io/py/causal-rl-shaping)
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%8F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/parisaze/Reward)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](YOUR_HUGGING_FACE_SPACE_URL)
+[![Research Project](https://img.shields.io/badge/Project-Research%20Code-blue)](https://github.com/parisazeynaly/Security-Testing-of-Large-Language-Models-via-Reinforcement-Learning)
 
 Official research implementation accompanying the M.Sc. thesis:
 
