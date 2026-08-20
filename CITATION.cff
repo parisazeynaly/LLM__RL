@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+
+message: "If you use CausalRLBreaker in your research, please cite this work."
+
+title: "CausalRLBreaker: Security Testing of Large Language Models via Causal Reinforcement Learning"
+
+type: software
+
+authors:
+  - family-names: "Zeinaliashtiyani"
+    given-names: "Parisa"
+
+version: "1.0.0"
+
+repository-code: "https://github.com/parisazeynaly/Security-Testing-of-Large-Language-Models-via-Reinforcement-Learning"
+
+url: "https://github.com/parisazeynaly/Security-Testing-of-Large-Language-Models-via-Reinforcement-Learning"
+
+license: "Apache-2.0"
+
+abstract: >
+  CausalRLBreaker is a research framework for automated security testing
+  of large language models using causal reinforcement learning. The
+  framework integrates causal state representations, structural causal
+  modeling, causal reward shaping, and intervention-guided reinforcement
+  learning for black-box LLM security evaluation.
+
+keywords:
+  - "large language models"
+  - "LLM security"
+  - "AI security"
+  - "red teaming"
+  - "causal machine learning"
+  - "causal reinforcement learning"
+  - "reinforcement learning"
+  - "structural causal models"
+  - "causal discovery"
+  - "PPO"
