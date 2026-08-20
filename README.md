@@ -5,31 +5,81 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 
-Official codebase for the Master's Thesis: **"Security Testing of Large Language Models via Causal Reinforcement Learning"** (University of Naples Federico II).
+Official research implementation accompanying the M.Sc. thesis:
 
-##  Abstract
-`CausalRLBreaker` resolves the **credit assignment problem** in automated black-box red-teaming by combining Fast Causal Inference (FCI) trajectory mapping with Potential-Based Reward Shaping (PBRS) and $do$-intervention guided action selection.
+> **Security Testing of Large Language Models via Causal Reinforcement Learning**
 
----
-
-##  Key Results (AdvBench on Llama-3.3-70B)
-| Method | ASR (%) | Avg. Tokens/Ep | Latency (s) | Training API Calls |
-| :--- | :---: | :---: | :---: | :---: |
-| **DAN (Static Prompting)** | 18.27 ± 2.88 | 222.99 | — | — |
-| **RLBreaker (Standard PPO)** | 19.33 ± 3.21 | 346.01 | ~7.20 | 20,480 |
-| **CausalRLBreaker (Ours)** | **61.54 ± 1.67** | **1735.55** | **3.30** | **11,915 (-41.8%)** |
-
-*  **3.18× ASR improvement** over RL baselines.
-*  **61.44% token cost reduction** during training.
-*  **Near-halving of cross-seed variance** ($\pm 3.21 \to \pm 1.67$).
+University of Naples Federico II (UniNa)
 
 ---
 
-## Key Methodological Contributions
-1. **Causal Observation Vector:** Maps raw prompt mutations into a 6D continuous causal state $s_t \in [0, 1]^6$.
-2. **Dense Causal Reward Shaping:** Employs an online SCM potential function $\Phi(s_t)$ grounded in Potential-Based Reward Shaping (PBRS) to provably preserve optimal policy invariance.
-3. **Causal-Guided Action Selection:** Re-ranks candidate mutations via estimated $do$-intervention effects $\Delta\Phi(a)$.
+## Overview
 
+Automated security testing of large language models (LLMs) can be formulated
+as a sequential search problem in which an agent iteratively transforms
+prompts to discover effective adversarial strategies.
+
+A central challenge is **credit assignment**: black-box feedback from the
+target model provides limited information about which intermediate
+transformations contributed to a successful outcome.
+
+**CausalRLBreaker** investigates whether causal information can be incorporated
+into reinforcement learning to provide more informative state representations,
+reward signals, and action-selection mechanisms for automated LLM security
+testing.
+
+The framework combines:
+
+- **Fast Causal Inference (FCI)** for estimating causal structure from
+  interaction trajectories;
+- **Structural Causal Models (SCMs)** for representing causal relationships;
+- **Potential-Based Reward Shaping (PBRS)** for incorporating causal information
+  into the reward signal; and
+- **$do$-intervention-guided action selection** for prioritizing candidate
+  prompt transformations.
+
+---
+
+## Research Question
+
+> **Can causal information improve the effectiveness and efficiency of
+> reinforcement-learning-based black-box security testing of large language
+> models?**
+
+The project investigates this question by integrating causal discovery and
+structural causal reasoning directly into an RL-based red-teaming pipeline.
+
+---
+## Key Contributions
+
+### 1. Causal Observation Vector
+
+CausalRLBreaker maps raw prompt mutations and trajectory information into a
+**6-dimensional continuous causal state representation**:
+
+\[
+s_t \in [0,1]^6.
+\]
+
+This representation provides the reinforcement learning agent with structured
+information beyond the raw black-box response signal.
+
+---
+
+### 2. Dense Causal Reward Shaping
+
+The framework introduces an online SCM-derived potential function
+
+\[
+\Phi(s_t)
+\]
+
+and incorporates it into **Potential-Based Reward Shaping (PBRS)**.
+
+The objective is to provide denser causal feedback during exploration while
+retaining the underlying reinforcement learning objective.
+
+---
 ---
 
 ## 💻 Quick Start
@@ -39,3 +89,61 @@ Official codebase for the Master's Thesis: **"Security Testing of Large Language
 git clone [https://github.com/parisazeynaly/CausalRLBreaker.git](https://github.com/parisazeynaly/CausalRLBreaker.git)
 cd CausalRLBreaker
 pip install -r requirements.txt
+### 3. Causal-Guided Action Selection
+
+Candidate prompt transformations are re-ranked using estimated causal
+intervention effects:
+
+\[
+\Delta \Phi(a).
+\]
+
+This mechanism provides causal guidance for exploration and complements the
+underlying PPO policy.
+
+---
+## Method
+
+The high-level CausalRLBreaker pipeline is:
+
+```text
+                 Initial Prompt
+                       |
+                       v
+              Prompt Transformation
+                       |
+                       v
+              Causal State Vector
+                       |
+                       v
+                FCI / Causal Graph
+                       |
+                       v
+                 Structural Causal
+                      Model
+                       |
+              +--------+--------+
+              |                 |
+              v                 v
+       Causal Potential   Intervention Effects
+              |                 |
+              +--------+--------+
+                       |
+                       v
+                  PPO Policy
+                       |
+                       v
+              Candidate Action
+                       |
+                       v
+                  Target LLM
+                       |
+                       v
+              Security Evaluation
+                       |
+                       v
+                    Reward
+                       |
+                       v
+                  Next State
+              
